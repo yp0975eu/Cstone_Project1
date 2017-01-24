@@ -1,9 +1,35 @@
+import display
 
+
+def start_game():
+    # dictionary from: https://www.flocabulary.com/5th-grade-vocabulary-word-list/
+    print(select_word())
+
+
+# get menu option
+def select_menu_option():
+
+    selection = input("\n")
+
+    while selection not in ['1', '2']:
+
+        selection = input("\n")
+
+    if selection == '1':
+
+        start_game()
+
+    elif selection == '2':
+
+        exit()
+
+
+# selects random word from words.txt
 def select_word():
     import random
     i = 0
 
-    file_name = '/usr/share/dict/words'
+    file_name = 'words.txt'
 
     # get line count
     # http://stackoverflow.com/q/845058
@@ -14,13 +40,15 @@ def select_word():
     file = open(file_name, "r")
 
     lines = file.readlines()
+
     return lines[random.randint(0, i)]
 
 
+# main function
 def run():
-    target_word = select_word()
-    print("Welcome to Hangman")
-    print("Word: ", target_word)
+    menu = display.Display
+    menu.welcome_menu()
+    select_menu_option()
 
 if __name__ == "__main__":
     run()
