@@ -19,7 +19,7 @@ class Main:
         # create a set for tracking valid guess, remove a valid guess and check for winning status by checking len
         self.letter_counter = set(self.letter_counter)
 
-        print(self.word)
+        # print(self.word)
 
         # print(self.letter_counter)
 
