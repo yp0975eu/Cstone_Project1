@@ -17,3 +17,14 @@ class Display:
         print("\n" + empty_word_string)
 
         pass
+
+    @staticmethod
+    def guess_letter_message():
+        print("\nGuess a letter")
+
+    @staticmethod
+    def show_available_letters(available_letters, guessed_letters):
+        print('\n\t\t\t\tAvailable letters')
+        print(' '.join(available_letters))
+
+
