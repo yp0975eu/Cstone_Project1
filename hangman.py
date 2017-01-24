@@ -2,8 +2,11 @@ import display
 
 
 def start_game():
+
     # dictionary from: https://www.flocabulary.com/5th-grade-vocabulary-word-list/
-    print(select_word())
+    word = select_word()
+
+    display.Display.show_game_board(word)
 
 
 # get menu option
@@ -46,8 +49,7 @@ def select_word():
 
 # main function
 def run():
-    menu = display.Display
-    menu.welcome_menu()
+    display.Display.welcome_menu()
     select_menu_option()
 
 if __name__ == "__main__":
