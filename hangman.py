@@ -1,5 +1,4 @@
-import display
-
+from display import Display
 
 class Main:
 
@@ -24,7 +23,7 @@ class Main:
         # print(self.letter_counter)
 
         # dictionary from: https://www.flocabulary.com/5th-grade-vocabulary-word-list/
-        display.Display.show_game_board(self.word)
+        Display.show_game_board(self.word)
 
         self.game_loop()
 
@@ -39,13 +38,11 @@ class Main:
 
         guessed_letters = []
 
-        # TODO: add winning logic
-
         while game_status:
 
-            display.Display.guess_letter_message()
+            Display.guess_letter_message()
 
-            display.Display.show_available_letters(available_letters)
+            Display.show_available_letters(available_letters)
 
             guess = input('\n')
 
@@ -61,7 +58,7 @@ class Main:
 
                 self.letter_counter.remove(guess)
 
-                display.Display.show_correct_guessed_letters(self.word, guessed_letters)
+                Display.show_correct_guessed_letters(self.word, guessed_letters)
 
             else:
 
@@ -79,7 +76,7 @@ class Main:
 
                     print('bad guess')
 
-                    display.Display.show_correct_guessed_letters(self.word, guessed_letters)
+                    Display.show_correct_guessed_letters(self.word, guessed_letters)
 
             if len(self.letter_counter) == 0:
 
@@ -128,7 +125,7 @@ class Main:
     # main function
     def run(self):
 
-        display.Display.welcome_menu()
+        Display.welcome_menu()
 
         self.select_menu_option()
 
