@@ -12,11 +12,13 @@ class Main:
         self.target_word = None
         self.available_letters = None
         self.guessed_letters = None
+        self.start_menu_options = ['Start Game', 'Exit']
 
         # get line count
+        # http://stackoverflow.com/questions/15233340/getting-rid-of-n-when-using-readlines/20756176#20756176
         # load line into class words attribute
         with open(self.file_name, "r") as file:
-            self.words = file.readlines()
+            self.words = file.read().splitlines()
 
     def start_game(self):
 
@@ -28,7 +30,7 @@ class Main:
 
         self.reset_game()
 
-        print(self.target_word)
+        #print(self.target_word)
 
         display.game_board(self.target_word)
 
@@ -40,19 +42,19 @@ class Main:
 
             display.available_letters(self.available_letters)
 
-            guess = input('\n')
+            good_guess = self.get_guess()
 
-            while guess not in self.available_letters:
+            while not good_guess:
+                good_guess = self.get_guess()
+                break
 
-                guess = input('\nThat\'s not a valid guess.\n')
+            if good_guess in self.target_letters:
 
-            if guess in self.target_letters:
+                self.remove_from_available_letters(good_guess)
 
-                self.available_letters.remove(guess)
+                self.guessed_letters.append(good_guess)
 
-                self.guessed_letters.append(guess)
-
-                self.target_letters.remove(guess)
+                self.target_letters.remove(good_guess)
 
                 display.correct_guessed_letters(self.target_word, self.guessed_letters)
 
@@ -65,10 +67,11 @@ class Main:
                     game_status = False
 
                     print('game over')
+                    print('the word was ', self.target_word)
 
                 else:
 
-                    self.available_letters.remove(guess)
+                    self.remove_from_available_letters(good_guess)
 
                     print('bad guess. {} guesses remaining'.format(self.bad_guesses))
 
@@ -87,19 +90,15 @@ class Main:
     # get menu option
     def select_menu_option(self):
 
-        selection = input("\n")
-
-        while selection not in ['1', '2']:
-
+        while True:
             selection = input("\n")
 
-        if selection == '1':
+            if display.is_valid_menu_option(selection, self.start_menu_options):
 
-            self.start_game()
+                return int(selection)
 
-        elif selection == '2':
-
-            exit()
+            else:
+                print('not a valid selection')
 
     # selects random word from words.txt
     def select_word(self):
@@ -108,7 +107,26 @@ class Main:
         return self.words[random.randint(0, len(self.words))].strip()
 
     def reset_bad_guess_count(self, count):
+        if type(count) is not int:
+            try:
+                count = int(count)
+            except (ValueError, TypeError):
+                count = 7
+
         self.bad_guesses = count
+
+    def get_guess(self):
+        return input('\n').lower()
+
+    def remove_from_available_letters(self, guess):
+        self.available_letters.remove(guess)
+
+    def is_in_available_letters(self, guess):
+        if guess not in self.available_letters:
+            print('\nThat\'s not a valid guess.\n')
+            return False
+        else:
+            return guess
 
     def get_new_word(self):
         return self.select_word()
@@ -130,9 +148,20 @@ class Main:
 
     # main function
     def run(self):
-        display.welcome_menu()
 
-        self.select_menu_option()
+        display.welcome_message()
+
+        display.menu(self.start_menu_options)
+
+        selection = self.select_menu_option()
+
+        if selection == 0:
+
+            self.start_game()
+
+        elif selection == 1:
+
+            exit()
 
 if __name__ == "__main__":
     m = Main()
