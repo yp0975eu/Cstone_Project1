@@ -6,60 +6,55 @@ class Main:
     file_name = 'words.txt'
 
     def __init__(self):
-        self.letter_counter = None
-        self.bad_guesses = None
-        self.word = None
+        self.target_letters = None
+        self.words = []
+        self.bad_guesses = 7
+        self.target_word = None
+        self.available_letters = None
+        self.guessed_letters = None
+
+        # get line count
+        # load line into class words attribute
+        with open(self.file_name, "r") as file:
+            self.words = file.readlines()
 
     def start_game(self):
-
-        self.letter_counter = self.word = self.select_word()
-
-        self.bad_guesses = 7
-
-        # create a set for tracking valid guess, remove a valid guess and check for winning status by checking len
-        self.letter_counter = set(self.letter_counter)
-
-        # print(self.word)
-
-        # print(self.letter_counter)
-
-        # dictionary from: https://www.flocabulary.com/5th-grade-vocabulary-word-list/
-        display.show_game_board(self.word)
 
         self.game_loop()
 
     def game_loop(self):
-        import string
 
         game_status = True
 
-        # https://docs.python.org/3/library/string.html#string-constants
+        self.reset_game()
 
-        available_letters = list(string.ascii_lowercase)
+        print(self.target_word)
 
-        guessed_letters = []
+        display.game_board(self.target_word)
 
         while game_status:
 
+            # dictionary from: https://www.flocabulary.com/5th-grade-vocabulary-word-list/
+
             display.guess_letter_message()
 
-            display.show_available_letters(available_letters)
+            display.available_letters(self.available_letters)
 
             guess = input('\n')
 
-            while guess not in available_letters:
+            while guess not in self.available_letters:
 
                 guess = input('\nThat\'s not a valid guess.\n')
 
-            if guess in self.word:
+            if guess in self.target_letters:
 
-                available_letters.remove(guess)
+                self.available_letters.remove(guess)
 
-                guessed_letters.append(guess)
+                self.guessed_letters.append(guess)
 
-                self.letter_counter.remove(guess)
+                self.target_letters.remove(guess)
 
-                Display.show_correct_guessed_letters(self.word, guessed_letters)
+                display.correct_guessed_letters(self.target_word, self.guessed_letters)
 
             else:
 
@@ -73,13 +68,13 @@ class Main:
 
                 else:
 
-                    available_letters.remove(guess)
+                    self.available_letters.remove(guess)
 
-                    print('bad guess')
+                    print('bad guess. {} guesses remaining'.format(self.bad_guesses))
 
-                    display.show_correct_guessed_letters(self.word, guessed_letters)
+                    display.correct_guessed_letters(self.target_word, self.guessed_letters)
 
-            if len(self.letter_counter) == 0:
+            if len(self.target_letters) == 0:
 
                 print("You win")
 
@@ -109,27 +104,35 @@ class Main:
     # selects random word from words.txt
     def select_word(self):
         import random
-        i = 0
 
-        # get line count
-        # http://stackoverflow.com/q/845058
-        with open(self.file_name) as f:
-            for i, l in enumerate(f):
-                pass
+        return self.words[random.randint(0, len(self.words))].strip()
 
-        file = open(self.file_name, "r")
+    def reset_bad_guess_count(self, count):
+        self.bad_guesses = count
 
-        lines = file.readlines()
+    def get_new_word(self):
+        return self.select_word()
 
-        return lines[random.randint(0, i)].strip()
+    def reset_game(self):
+        import string
+
+        # https://docs.python.org/3/library/string.html#string-constants
+        self.available_letters = list(string.ascii_lowercase)
+
+        self.guessed_letters = []
+
+        self.target_word = self.get_new_word()
+
+        # create a set for tracking valid guess, remove a valid guess and check for winning status by checking len
+        self.target_letters = set(self.target_word)
+
+        self.reset_bad_guess_count(7)
 
     # main function
     def run(self):
-
         display.welcome_menu()
 
         self.select_menu_option()
-
 
 if __name__ == "__main__":
     m = Main()
