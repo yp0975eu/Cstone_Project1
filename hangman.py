@@ -42,11 +42,10 @@ class Main:
 
             display.available_letters(self.available_letters)
 
-            good_guess = self.get_guess()
-
+            good_guess = False
             while not good_guess:
-                good_guess = self.get_guess()
-                break
+                guess = self.get_guess()
+                good_guess = self.is_in_available_letters(guess)
 
             if good_guess in self.target_letters:
 
